@@ -1,10 +1,8 @@
 package com.epam.androidlab.epamandroidtask6;
 
-import android.content.Context;
 import android.content.res.Configuration;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -13,8 +11,11 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity {
-    private int clickCount = 0;
+    private static final String URL="https://loyl.me/wp-content/uploads/2013/08/loyalty500x500.png";
+    private static final String MARGIN_TOP_KEY="marginTop";
+    private static final String MARGIN_LEFT_KEY="marginLeft";
 
+    private int clickCount = 0;
     private int marginTop = 0;
     private int marginLeft = 0;
 
@@ -23,9 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView text;
     private FrameLayout.LayoutParams params;
-    private View.OnLongClickListener textListener = new View.OnLongClickListener() {
-        @Override
-        public boolean onLongClick(View v) {
+    private View.OnLongClickListener textListener = (v)-> {
             clickCount++;
             switch (clickCount) {
                 case 1: {
@@ -52,8 +51,7 @@ public class MainActivity extends AppCompatActivity {
             }
             text.setLayoutParams(params);
             return false;
-        }
-    };
+        };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,10 +59,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ImageView image = (ImageView) findViewById(R.id.image);
+        Picasso.with(this).load(URL).into(image);
         image.setOnLongClickListener(textListener);
-        Picasso.with(this)
-                .load("https://loyl.me/wp-content/uploads/2013/08/loyalty500x500.png")
-                .into(image);
 
         text = (TextView) findViewById(R.id.text);
 
@@ -89,8 +85,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        marginTop = savedInstanceState.getInt("marginTop");
-        marginLeft = savedInstanceState.getInt("marginLeft");
+        marginTop = savedInstanceState.getInt(MARGIN_TOP_KEY);
+        marginLeft = savedInstanceState.getInt(MARGIN_LEFT_KEY);
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             if (marginTop != 0) {
                 marginTop = pxFromDp(getResources().getDimension(R.dimen.text_vertical_margin_land));
@@ -114,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt("marginTop", marginTop);
-        outState.putInt("marginLeft", marginLeft);
+        outState.putInt(MARGIN_TOP_KEY, marginTop);
+        outState.putInt(MARGIN_LEFT_KEY, marginLeft);
     }
 }
